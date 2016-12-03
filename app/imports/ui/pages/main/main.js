@@ -2,7 +2,7 @@
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
 * @Last Modified by:   Radu Gota (radu@attic-studio.net)
-* @Last Modified time: 2016-12-03 15:06:10
+* @Last Modified time: 2016-12-03 16:16:45
 */
 
 import { Meteor } from 'meteor/meteor';
@@ -30,7 +30,11 @@ Template.main.onRendered(function rendered(){
 
 Template.main.helpers({
 	favorites() {
-		return [{from: 'Home', to: "Work", line: 'U8', station: 'Rosenthaler Platz'}];
+		return [
+			{from: 'Home', to: "Work", line: 'U8', station: 'Rosenthaler Platz'},
+			{from: 'Home', to: "Gym", line: 'U6', station: 'Oranienburger Tor'},
+			{from: 'Work', to: "Home", line: 'U2', station: 'Stadtmitte'}
+		];
 	}
 });
 
