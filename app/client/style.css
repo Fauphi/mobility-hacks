@@ -107,6 +107,20 @@ button:focus {
     font-size: 16px; }
     .app-row.search i {
       padding-right: 5px; }
+  .app-row.label span {
+    font-style: italic;
+    opacity: 0.4;
+    color: black;
+    font-size: 14px;
+    font-weight: 300; }
+  .app-row.list {
+    font-weight: 800; }
+    .app-row.list .pull-left {
+      font-weight: 800; }
+    .app-row.list .pull-right {
+      color: #65C997; }
+  .app-row:last-of-type {
+    border-bottom: none; }
 
 #main {
   width: 100vw; }
