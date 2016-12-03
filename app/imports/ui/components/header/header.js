@@ -1,8 +1,8 @@
 /*
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
-* @Last Modified by:   Radu Gota (radu@attic-studio.net)
-* @Last Modified time: 2016-12-03 21:23:55
+* @Last Modified by:   Philipp
+* @Last Modified time: 2016-12-03 21:50:10
 */
 
 import { Template } from 'meteor/templating';
@@ -96,6 +96,14 @@ Template.header.helpers({
 				};
 			}
 		}			
+	},
+	getClosest() {
+		const s = Session.get('totalData')
+		,	testDate = new Date().getTime();
+		if(s) {
+			getClosest(testDate, s.allTotals);
+		}
+		
 	}
 });
 
@@ -109,4 +117,49 @@ Template.header.events({
 
 var messages = {
 
+}
+
+const getBerlinTime = (timeString) => {
+	const tmpDate = moment(new Date()).format('YYYY-MM-DD');
+	return moment(new Date(tmpDate+' '+timeString)).utcOffset(1).format();
+}
+
+const getClosest = function(testDate, days) {
+	var bestPrevDate = days.length;
+	var bestNextDate = days.length;
+
+	var max_date_value = Math.abs((new Date(0,0,0).getTime()));
+
+	var bestPrevDiff = max_date_value;
+	var bestNextDiff = -max_date_value;
+
+	var currDiff = 0;
+	var i = 0;
+
+	testDate = new Date(testDate).getTime();
+
+	for(i = 0; i < days.length; ++i){
+	   currDiff = testDate - new Date(getBerlinTime(days[i].Abfahrtszeit)).getTime();
+	   if(currDiff < 0 && currDiff > bestNextDiff){
+	   // If currDiff is negative, then testDate is more in the past than days[i].
+	   // This means, that from testDate's point of view, days[i] is in the future
+	   // and thus by a candidate for the next date.
+	       bestNextDate = i;
+	       bestNextDiff = currDiff;
+	   }
+	   if(currDiff > 0 && currDiff < bestPrevDiff){
+	   // If currDiff is positive, then testDate is more in the future than days[i].
+	   // This means, that from testDate's point of view, days[i] is in the past
+	   // and thus by a candidate for the previous date.
+	       bestPrevDate = i;
+	       bestPrevDiff = currDiff;
+	   }   
+
+	}
+	/* days[bestPrevDate] is the best previous date, 
+	   days[bestNextDate] is the best next date */
+	const nextDiff = testDate - new Date(getBerlinTime(days[bestNextDate])).getTime()
+	,	prevDiff = testDate - new Date(getBerlinTime(days[bestPrevDate])).getTime();
+
+	return (nextDiff<prevDiff)?days[bestNextDate]:days[bestPrevDate];
 }

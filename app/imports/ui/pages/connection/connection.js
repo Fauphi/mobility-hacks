@@ -2,7 +2,7 @@
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
 * @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-03 19:01:08
+* @Last Modified time: 2016-12-03 21:45:53
 */
 
 import { Meteor } from 'meteor/meteor';
@@ -17,15 +17,14 @@ import './connection.html';
 Template.connection.onCreated(function created() {
 	this.subscribe('all-connections');
 
-	Meteor.call('connection.get', 'Nordendstr.', new Date(), function(err,res) {
-		console.log(err);
-		console.log(res);
-		Session.set('connectionData', res);
-	});
-
 	Meteor.call('connection.getTimes', new Date(), function(err,res) {
 		console.log(res);
 		Session.set('timeData', res);
+	});
+
+	Meteor.call('connection.getTotals', 'Nordendstr.', new Date(), function(err,res) {
+		console.log(res);
+		Session.set('totalData', res);
 	});
 });
 

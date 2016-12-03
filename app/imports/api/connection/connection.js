@@ -2,31 +2,116 @@
 * @Author: Philipp
 * @Date:   2016-12-03 13:13:34
 * @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-03 19:13:43
+* @Last Modified time: 2016-12-03 21:43:02
 */
 
 // 'use strict';
 
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
-// import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 export const Connection = new Mongo.Collection('connection');
 
 const CustomerCounts = new Mongo.Collection('customercounts');
 
+const getCounts = (locationName, locationId, direction, directionName) => {
+	const regex = new RegExp(locationName.trim(), 'g')
+	,	countData = CustomerCounts.find({'Haltestelle': regex}).fetch();
+
+	const hstArray = [];
+	let directionObject = {};
+
+	// extract all direction stops
+	for(let item of countData) {
+		if(hstArray.indexOf(item['Ab-Hst-Nr'])==-1) hstArray.push(item['Ab-Hst-Nr']);
+	}
+
+	// find direction stop
+	for(let j=0;j<hstArray.length;j++) {
+		const startId = hstArray[j];
+
+		const allWithSameStartId = CustomerCounts.find({'Ab-Hst-Nr': startId}).fetch();
+
+		let lastHstNr = 0;
+		let lastHst = null;
+		for(let i=0;i<allWithSameStartId.length;i++) {
+			const item = allWithSameStartId[i];
+			const hst = item['lfd-Hst'];
+			if(hst>lastHst) {
+				lastHstNr = hst;
+				lastHst = item;
+			}
+		}
+
+		if(lastHst.Haltestelle==directionName) {
+			directionObject = lastHst;
+			break;
+		}
+	}	
+
+	const realCountData = CustomerCounts.find({'Haltestelle': regex, 'Ab-Hst-Nr': directionObject['Ab-Hst-Nr']}).fetch();
+	
+	const formatAbfahrtszeit = (time) => {
+		var split = time.split(':')
+		,	hours = (split[0].length==1)?'0'+split[0]:split[0]
+		,	min = (split[1].length==1)?'0'+split[1]:split[1]
+		,	sec = (split[2].length==1)?'0'+split[2]:split[2];
+		return hours+':'+min+':'+sec;
+	}
+
+	// sort times
+	const sorted = realCountData.sort(function(a,b) {
+		const tmpDate = moment(new Date()).format('YYYY-MM-DD');
+		
+		const aTS = new Date(tmpDate+'T'+formatAbfahrtszeit(a.Abfahrtszeit)).getTime()
+		,	bTS = new Date(tmpDate+'T'+formatAbfahrtszeit(b.Abfahrtszeit)).getTime();
+
+		if(aTS>bTS) return 1;
+		else if(aTS<bTS) return -1;
+		else return 0;
+	});
+
+	let total = 0;
+
+	// calc total customers
+	for(let item of sorted) {
+		// console.log(item.Haltestelle+': '+item.Abfahrtszeit);
+		item.total = 0;
+		const totalCountArray = CustomerCounts.find({'Ab-Hst-Nr': item['Ab-Hst-Nr'], Kurs: item.Kurs, 'PAG-Nr': item['PAG-Nr']}, {sort: {'lfd-Hst': 1}}).fetch();
+
+		for(let k=0;k<totalCountArray.length;k++) {
+			const countItem = totalCountArray[k];
+			if(countItem.Haltestelle==item.Haltestelle) break;
+
+			let diff = 0;
+			diff += countItem.Einsteiger;
+			diff -= countItem.Aussteiger;
+			item.total += Math.round(diff);
+		}
+
+		// console.log('Total: ', item.total);
+	}
+
+	return {allTotals: sorted};
+}
+
+const locationId = '009132502'
+,	locationName = 'Nordendstr.'
+,	direction = '009132014'
+,	directionName = 'Rosenthal Nord';
+
 if(Meteor.isServer) {
     import './server/publications.js';
 
     Meteor.methods({
+    	'connection.getTotals'(currentDate) {
+    		console.log('GET COUNTS');
+			return getCounts(locationName, locationId, direction, directionName);
+    	},
     	'connection.getTimes'(currentDate) {
-    		console.log('connection.getTimes');
+    		console.log('GET DEPARTURE TIMES');
     		const getRequest = Meteor.wrapAsync(HTTP.call, HTTP)
 			,	endParams = "&format=json&accessId=BVG-VBB-Dezember";
-    		
-    		const locationId = '009132502'
-			,	locationName = 'Nordendstr.'
-			,	direction = '009132014';
 
 			// get delay
 			const startTime = moment(currentDate).format('HH:mm');
@@ -56,113 +141,117 @@ if(Meteor.isServer) {
 				if(!delay) delay = 0;
 
 				const formattedTime = item.time.split(':')[0]+':'+item.time.split(':')[1]
-				, timestamp = new Date(tmpDate+'T'+item.time).getTime();
+				,	timestamp = new Date(tmpDate+'T'+item.rtTime).getTime();
 
 				timeArray.push({time: formattedTime, timestamp: timestamp, direction: item.direction, delay: delay});
 			}
 
 			return timeArray;
     	},
-        'connection.get'(searchString, currentDate) {
-        	console.log('connection.get');
-			const getRequest = Meteor.wrapAsync(HTTP.call, HTTP)
-			,	endParams = "&format=json&accessId=BVG-VBB-Dezember";
+   //      'connection.get'(searchString, currentDate) {
+   //      	console.log('connection.get');
+			// const getRequest = Meteor.wrapAsync(HTTP.call, HTTP)
+			// ,	endParams = "&format=json&accessId=BVG-VBB-Dezember";
 
-			// get location by search string
+			// // get location by search string
 
-			const url1 = "http://demo.hafas.de/openapi/vbb-proxy/location.name?input="+searchString+"&maxNo=1&type=S"+endParams
-			,	res1 = getRequest('GET', url1).data;
+			// const url1 = "http://demo.hafas.de/openapi/vbb-proxy/location.name?input="+searchString+"&maxNo=1&type=S"+endParams
+			// ,	res1 = getRequest('GET', url1).data;
 
-			const location = res1.stopLocationOrCoordLocation[0].StopLocation;
+			// const location = res1.stopLocationOrCoordLocation[0].StopLocation;
 
-			if(!location) {
-				console.log('failed'); 
-				return;
-			}
-
-			const locationId = location.extId
-			,	locationName = location.name.replace('(Berlin)', '');
-
-			// get delay
-			const startTime = moment(currentDate).format('HH:mm');
-
-			console.log(startTime);
-
-			// &time="+startTime+"&date="+currentDate+"
-			const url2 = "http://demo.hafas.de/openapi/vbb-proxy/departureBoard?id="+locationId+"&time="+startTime+"&maxJourneys=1"+endParams
-			,	res2 = getRequest('GET', url2).data;
-
-			const departure = res2.Departure[0];
-
-			if(!departure) {
-				console.log('failed'); 
-				return;
-			}
-
-			const tmpDate = moment(currentDate).format('YYYY-MM-DD');
-
-			const timetable = new Date(tmpDate+'T'+departure.time).getTime()
-			,	realtime = new Date(tmpDate+'T'+departure.rtTime).getTime()
-			,	tmpDelay = (realtime - timetable) / (1000 * 60)
-			,	delay = (tmpDelay<0)?tmpDelay*-1:tmpDelay
-			,	direction = departure.direction;
-
-			// TODO: get other times
-			// for() {
-			// 	startTime+(i*10);
+			// if(!location) {
+			// 	console.log('failed'); 
+			// 	return;
 			// }
 
-			// get customer counts by locationName
-			const regex = new RegExp(locationName.trim(), 'g')
-			,	countData = CustomerCounts.find({'Haltestelle': regex}).fetch();
+			// const locationId = location.extId
+			// ,	locationName = location.name.replace('(Berlin)', '');
 
-			// get closest
-			var days = [];
-			for(let i=0;i<countData.length;i++) {
-				var time = countData[i]['Abfahrtszeit']
-				,	split = time.split(':')
-				,	hours = (split[0].length==1)?'0'+split[0]:split[0]
-				,	min = (split[1].length==1)?'0'+split[1]:split[1]
-				,	sec = (split[2].length==1)?'0'+split[2]:split[2]
-				,	formatted = hours+':'+min+':'+sec;
+			// // get delay
+			// const startTime = moment(currentDate).format('HH:mm');
+
+			// console.log(startTime);
+
+			// // &time="+startTime+"&date="+currentDate+"
+			// const url2 = "http://demo.hafas.de/openapi/vbb-proxy/departureBoard?id="+locationId+"&time="+startTime+"&maxJourneys=1"+endParams
+			// ,	res2 = getRequest('GET', url2).data;
+
+			// const departure = res2.Departure[0];
+
+			// if(!departure) {
+			// 	console.log('failed'); 
+			// 	return;
+			// }
+
+			// const tmpDate = moment(currentDate).format('YYYY-MM-DD');
+
+			// const timetable = new Date(tmpDate+'T'+departure.time).getTime()
+			// ,	realtime = new Date(tmpDate+'T'+departure.rtTime).getTime()
+			// ,	tmpDelay = (realtime - timetable) / (1000 * 60)
+			// ,	delay = (tmpDelay<0)?tmpDelay*-1:tmpDelay
+			// ,	direction = departure.direction;
+
+			// // TODO: get other times
+			// // for() {
+			// // 	startTime+(i*10);
+			// // }
+
+			// // get customer counts by locationName
+			// const regex = new RegExp(locationName.trim(), 'g')
+			// ,	countData = CustomerCounts.find({'Haltestelle': regex}).fetch();
+
+			// // get closest
+			// var days = [];
+			// for(let i=0;i<countData.length;i++) {
+			// 	var time = countData[i]['Abfahrtszeit']
+			// 	,	split = time.split(':')
+			// 	,	hours = (split[0].length==1)?'0'+split[0]:split[0]
+			// 	,	min = (split[1].length==1)?'0'+split[1]:split[1]
+			// 	,	sec = (split[2].length==1)?'0'+split[2]:split[2]
+			// 	,	formatted = hours+':'+min+':'+sec;
 				
-				var date = moment(new Date(tmpDate+' '+formatted)).utcOffset(1).format();
-				days.push(new Date(date));
-			}
+			// 	var date = moment(new Date(tmpDate+' '+formatted)).utcOffset(1).format();
+			// 	days.push(new Date(date));
+			// }
 
-			// console.log(days);
+			// // console.log(days);
 
-			// real count data
-			const closest = getClosest(moment(new Date(tmpDate+' '+departure.time)).utcOffset(1).format(),days);
-			const realCountData = CustomerCounts.findOne({'Haltestelle': regex, 'Abfahrtszeit': moment(closest).format('HH:mm:SS')});
+			// // real count data
+			// const closest = getClosest(moment(new Date(tmpDate+' '+departure.time)).utcOffset(1).format(),days);
+			// const realCountData = CustomerCounts.findOne({'Haltestelle': regex, 'Abfahrtszeit': moment(closest).format('HH:mm:SS')});
 
-			console.log(realCountData);
+			// console.log(realCountData);
 			
-			// console.log(countData);
+			// // console.log(countData);
 
-			// TODO: calc user count from start stop
+			// // TODO: calc user count from start stop
 
-			console.log(departure.time+' => '+departure.rtTime);
+			// console.log(departure.time+' => '+departure.rtTime);
 
-			// create return object
-			const result = {
-				locationName: locationName,
-				direction: departure.direction,
-				line: departure.name,
-				departureTime: departure.time.split(':')[0]+':'+departure.time.split(':')[1],
-				otherDepartureTimes: [],
-				delay: delay,
-				coords: {lon: location.lon, lat: location.lat}
-			};
-			console.log(result);
-			return result;
-        }
+			// // create return object
+			// const result = {
+			// 	locationName: locationName,
+			// 	direction: departure.direction,
+			// 	line: departure.name,
+			// 	departureTime: departure.time.split(':')[0]+':'+departure.time.split(':')[1],
+			// 	otherDepartureTimes: [],
+			// 	delay: delay,
+			// 	coords: {lon: location.lon, lat: location.lat}
+			// };
+
+			// console.log(result);
+			// return result;
+   //      }
     });
 }
 
-const getClosest = function(testDate, days) {
-	// var testDate = new Date(...);
+const getBerlinTime = (timeString) => {
+	const tmpDate = moment(new Date()).format('YYYY-MM-DD');
+	return moment(new Date(tmpDate+' '+timeString)).utcOffset(1).format();
+}
 
+const getClosest = function(testDate, days) {
 	var bestPrevDate = days.length;
 	var bestNextDate = days.length;
 
@@ -177,7 +266,7 @@ const getClosest = function(testDate, days) {
 	testDate = new Date(testDate).getTime();
 
 	for(i = 0; i < days.length; ++i){
-	   currDiff = testDate - days[i].getTime();
+	   currDiff = testDate - new Date(getBerlinTime(days[i].Abfahrtszeit)).getTime();
 	   if(currDiff < 0 && currDiff > bestNextDiff){
 	   // If currDiff is negative, then testDate is more in the past than days[i].
 	   // This means, that from testDate's point of view, days[i] is in the future
@@ -196,13 +285,8 @@ const getClosest = function(testDate, days) {
 	}
 	/* days[bestPrevDate] is the best previous date, 
 	   days[bestNextDate] is the best next date */
-	return days[bestNextDate];
-}
+	const nextDiff = testDate - new Date(getBerlinTime(days[bestNextDate])).getTime()
+	,	prevDiff = testDate - new Date(getBerlinTime(days[bestPrevDate])).getTime();
 
-// Connection.attachSchema(new SimpleSchema({
-// 	title: {
-//         type: String,
-//         label: "Title",
-//         max: 200
-//     }
-// }));
+	return (nextDiff<prevDiff)?days[bestNextDate]:days[bestPrevDate];
+}
