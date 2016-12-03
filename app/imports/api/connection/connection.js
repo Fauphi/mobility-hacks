@@ -2,7 +2,7 @@
 * @Author: Philipp
 * @Date:   2016-12-03 13:13:34
 * @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-03 18:57:37
+* @Last Modified time: 2016-12-03 19:00:59
 */
 
 // 'use strict';
@@ -19,7 +19,7 @@ if(Meteor.isServer) {
     import './server/publications.js';
 
     Meteor.methods({
-    	'connection.getTimes'(searchString, currentDate) {
+    	'connection.getTimes'(currentDate) {
     		console.log('connection.getTimes');
     		const getRequest = Meteor.wrapAsync(HTTP.call, HTTP)
 			,	endParams = "&format=json&accessId=BVG-VBB-Dezember";
