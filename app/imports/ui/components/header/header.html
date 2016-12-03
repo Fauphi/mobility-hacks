@@ -4,15 +4,12 @@
 
 		{{#if isMain}}
 			<div class="main-header animated fadeIn flexleft">
-
-					<div>
-						<h4>Select Departure</h4>
-						<p>or search for the right station</p>
-					</div>
-				
+				<div>
+					<h4>Select Departure</h4>
+					<p>or search for the right station</p>
+				</div>	
 			</div>
 		{{/if}}
-		{{getClosest}}
 		{{#if isConnection}}
 			{{#if timeData}}
 				<div class="connection-header animated fadeIn">
@@ -34,7 +31,7 @@
 					</div>
 					
 					<div class="display">
-						<div class="flexcenter">
+						<div class="flexbottom">
 
 							<div class="main-display {{#if nextTime.delay}} {{else}} closed {{/if}}">
 								<span class="huge {{#with minuteCount}}{{#if longTime}}shrink{{/if}}{{/with}}">{{minuteCount}}</span>
@@ -59,7 +56,11 @@
 					</div>
 					<div class="status">
 						<div class="flexcenter">
-							<span>Plenty of legroom</span>
+							{{#if getClosest}}
+							<span class="animated fadeIn">Plenty of legroom</span>
+							{{else}}
+								<span class="animated fadeIn">Loading...</span> 
+							{{/if}}
 						</div>
 					</div>
 					<div class="time-bar">
@@ -72,6 +73,7 @@
 									</div>
 								</div>
 								<div class="bottom">
+									<div class="grad" style="background: -webkit-linear-gradient(left, yellow 0%, green 100%)"></div>
 								</div>
 							</div>
 						{{/each}}					

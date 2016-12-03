@@ -152,6 +152,8 @@ button:focus {
     opacity: 0.5;
     font-style: italic; }
   #header.green {
+    background-color: #F4A66D; }
+  #header.green {
     background-color: #65C997; }
   #header.red {
     background-color: #F46D6D; }
@@ -181,8 +183,9 @@ button:focus {
         font-weight: 300;
         padding-left: 5px; }
     #header .connection-header .display {
-      height: 33vh;
-      overflow: hidden; }
+      height: 28vh;
+      overflow: hidden;
+      line-height: 1; }
       #header .connection-header .display .main-display {
         -webkit-transition: all 300ms;
         -moz-transition: all 300ms;
@@ -214,7 +217,8 @@ button:focus {
         border-bottom-left-radius: 0px;
         text-align: center;
         padding-top: 1.5vh;
-        margin-left: 10px; }
+        margin-left: 10px;
+        margin-bottom: 15vw; }
         #header .connection-header .display .delay span {
           color: #F46D6D;
           line-height: 0; }
@@ -222,40 +226,45 @@ button:focus {
             font-size: 8vw;
             font-weight: 800; }
     #header .connection-header .status {
-      height: 5vh;
+      height: 6vh;
       overflow: hidden; }
       #header .connection-header .status span {
         font-style: italic;
         font-size: 20px;
         opacity: 0.75; }
     #header .connection-header .time-bar {
-      height: 12vh;
+      height: 16vh;
       overflow-y: hidden;
       overflow-x: scroll;
       -webkit-overflow-scrolling: touch;
       width: 100vw;
       white-space: nowrap;
-      text-align: left;
-      padding-left: 10vw; }
+      text-align: left; }
       #header .connection-header .time-bar::-webkit-scrollbar {
         display: none; }
       #header .connection-header .time-bar .time-block {
         display: inline-block;
-          display-white-space: nowrap; }
+          display-white-space: nowrap;
+          display-margin-right: -4px !important; }
         #header .connection-header .time-bar .time-block .top {
-          height: 70%;
+          height: 60%;
           width: 100%;
           float: left; }
           #header .connection-header .time-bar .time-block .top span {
             margin-left: -4.5vw;
             font-size: 3.5vw; }
         #header .connection-header .time-bar .time-block .bottom {
-          height: 25%;
-          margin-top: 10%;
+          height: 40%;
           width: 100%;
           border-left: solid 1px white;
           float: left;
           position: relative; }
+          #header .connection-header .time-bar .time-block .bottom .grad {
+            width: 100%;
+            height: 4vh;
+            position: absolute;
+            bottom: 1px;
+            left: 0; }
         #header .connection-header .time-bar .time-block.small {
           width: 14vw;
           height: 100%; }
@@ -265,14 +274,26 @@ button:focus {
         #header .connection-header .time-bar .time-block.large {
           width: 28vw;
           height: 100%; }
-        #header .connection-header .time-bar .time-block:first-of-type .top {
-          height: 40%; }
-          #header .connection-header .time-bar .time-block:first-of-type .top span {
-            font-weight: 800;
-            font-size: 5vw;
-            margin-left: -6vw; }
-        #header .connection-header .time-bar .time-block:first-of-type .bottom {
-          height: 60%; }
+        #header .connection-header .time-bar .time-block:first-of-type {
+          padding-left: 10vw;
+          width: 23vw;
+          margin-right: -1.2vw !important; }
+          #header .connection-header .time-bar .time-block:first-of-type .top {
+            height: 40%; }
+            #header .connection-header .time-bar .time-block:first-of-type .top span {
+              font-weight: 800;
+              font-size: 5vw;
+              margin-left: -6vw; }
+          #header .connection-header .time-bar .time-block:first-of-type .bottom {
+            height: 60%; }
+            #header .connection-header .time-bar .time-block:first-of-type .bottom .grad {
+              width: 100%;
+              height: 4vh;
+              position: absolute;
+              bottom: 1px;
+              left: 0;
+              width: 23vw;
+              margin-left: -11vw; }
 
 #footer {
   background: rgba(0, 0, 0, 0.03);

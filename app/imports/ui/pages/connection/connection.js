@@ -1,8 +1,8 @@
 /*
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
-* @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-03 21:45:53
+* @Last Modified by:   Radu Gota (radu@attic-studio.net)
+* @Last Modified time: 2016-12-03 22:06:39
 */
 
 import { Meteor } from 'meteor/meteor';
@@ -29,7 +29,7 @@ Template.connection.onCreated(function created() {
 });
 
 Template.connection.onRendered(function rendered(){
-	Session.set("statusColor", "red");
+	// Session.set("statusColor", "red");
 	Session.set("headerHeight", "expanded");
 });
 

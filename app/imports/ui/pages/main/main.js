@@ -2,7 +2,7 @@
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
 * @Last Modified by:   Radu Gota (radu@attic-studio.net)
-* @Last Modified time: 2016-12-03 16:16:45
+* @Last Modified time: 2016-12-03 22:06:49
 */
 
 import { Meteor } from 'meteor/meteor';
@@ -22,8 +22,8 @@ Template.main.onCreated(function created() {
 });
 
 Template.main.onRendered(function rendered(){
-	Session.set("statusColor", "green");
 	Session.set("headerHeight", "");
+	Session.set("statusColor", "green");
 
 
 });
