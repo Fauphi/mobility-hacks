@@ -2,7 +2,7 @@
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
 * @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-03 21:50:10
+* @Last Modified time: 2016-12-03 21:52:14
 */
 
 import { Template } from 'meteor/templating';
@@ -100,10 +100,8 @@ Template.header.helpers({
 	getClosest() {
 		const s = Session.get('totalData')
 		,	testDate = new Date().getTime();
-		if(s) {
-			getClosest(testDate, s.allTotals);
-		}
-		
+		if(s) console.log(getClosest(testDate, s.allTotals));
+		return s && getClosest(testDate, s.allTotals);
 	}
 });
 
