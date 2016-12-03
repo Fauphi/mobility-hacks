@@ -2,7 +2,7 @@
 * @Author: Philipp
 * @Date:   2016-12-03 13:13:34
 * @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-03 21:43:02
+* @Last Modified time: 2016-12-03 23:38:57
 */
 
 // 'use strict';
@@ -26,6 +26,8 @@ const getCounts = (locationName, locationId, direction, directionName) => {
 		if(hstArray.indexOf(item['Ab-Hst-Nr'])==-1) hstArray.push(item['Ab-Hst-Nr']);
 	}
 
+	console.log('Direectioins: ',hstArray);
+
 	// find direction stop
 	for(let j=0;j<hstArray.length;j++) {
 		const startId = hstArray[j];
@@ -34,20 +36,33 @@ const getCounts = (locationName, locationId, direction, directionName) => {
 
 		let lastHstNr = 0;
 		let lastHst = null;
+		let found = false;
 		for(let i=0;i<allWithSameStartId.length;i++) {
 			const item = allWithSameStartId[i];
 			const hst = item['lfd-Hst'];
-			if(hst>lastHst) {
-				lastHstNr = hst;
-				lastHst = item;
+			
+			// if(hst>=lastHst) {
+			// 	lastHstNr = hst;
+			// 	lastHst = item;
+			// }
+
+			if(item.Haltestelle==directionName) {
+				directionObject = item;
+				found = true;
+				break;
 			}
 		}
 
-		if(lastHst.Haltestelle==directionName) {
-			directionObject = lastHst;
-			break;
-		}
+		if(found) break;
+		// console.log(lastHstNr);
+
+		// if(lastHst.Haltestelle==directionName) {
+		// 	directionObject = lastHst;
+		// 	break;
+		// }
 	}	
+
+	console.log(directionObject);
 
 	const realCountData = CustomerCounts.find({'Haltestelle': regex, 'Ab-Hst-Nr': directionObject['Ab-Hst-Nr']}).fetch();
 	
@@ -95,21 +110,54 @@ const getCounts = (locationName, locationId, direction, directionName) => {
 	return {allTotals: sorted};
 }
 
-const locationId = '009132502'
-,	locationName = 'Nordendstr.'
-,	direction = '009132014'
-,	directionName = 'Rosenthal Nord';
+// const locationId = '009132502'
+// ,	locationName = 'Nordendstr.'
+// ,	direction = '009132014'
+// ,	directionName = 'Rosenthal Nord';
+
+// const locationId = '009131528'
+// ,	locationName = 'Grabbeallee/Pastor-Niemöller-Pl.'
+// ,	direction = '009130011'
+// ,	directionName = 'U Vinetastr.';
+
+const locations = {
+	first: {
+		locationId: '009132502',
+		locationName: 'Nordendstr.',
+		direction: '009132014',
+		directionName: 'Rosenthal Nord'
+	},
+	second: {
+		locationId: '009131528',
+		locationName: 'Grabbeallee/Pastor-Niemöller-Pl.',
+		direction: '009130011',
+		directionName: 'U Vinetastr.'
+	}
+}
 
 if(Meteor.isServer) {
     import './server/publications.js';
 
     Meteor.methods({
-    	'connection.getTotals'(currentDate) {
+    	'connection.getTotals'(locKey) {
     		console.log('GET COUNTS');
+    		const loc = locations[locKey]
+			,	locationId = loc.locationId
+			,	locationName = loc.locationName
+			,	direction = loc.direction
+			,	directionName = loc.directionName;
+
 			return getCounts(locationName, locationId, direction, directionName);
     	},
-    	'connection.getTimes'(currentDate) {
+    	'connection.getTimes'(currentDate, locKey) {
     		console.log('GET DEPARTURE TIMES');
+
+    		const loc = locations[locKey]
+			,	locationId = loc.locationId
+			,	locationName = loc.locationName
+			,	direction = loc.direction
+			,	directionName = loc.directionName;
+
     		const getRequest = Meteor.wrapAsync(HTTP.call, HTTP)
 			,	endParams = "&format=json&accessId=BVG-VBB-Dezember";
 

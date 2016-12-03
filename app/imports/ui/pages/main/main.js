@@ -1,8 +1,8 @@
 /*
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
-* @Last Modified by:   Radu Gota (radu@attic-studio.net)
-* @Last Modified time: 2016-12-03 22:06:49
+* @Last Modified by:   Philipp
+* @Last Modified time: 2016-12-03 23:46:28
 */
 
 import { Meteor } from 'meteor/meteor';
@@ -22,8 +22,8 @@ Template.main.onCreated(function created() {
 });
 
 Template.main.onRendered(function rendered(){
-	Session.set("headerHeight", "");
 	Session.set("statusColor", "green");
+	Session.set("headerHeight", "");
 
 
 });
@@ -31,9 +31,9 @@ Template.main.onRendered(function rendered(){
 Template.main.helpers({
 	favorites() {
 		return [
-			{from: 'Home', to: "Work", line: 'U8', station: 'Rosenthaler Platz'},
-			{from: 'Home', to: "Gym", line: 'U6', station: 'Oranienburger Tor'},
-			{from: 'Work', to: "Home", line: 'U2', station: 'Stadtmitte'}
+			{from: 'Home', to: "Work", line: 'Tram M1', station: 'Nordendstraße', location: 'first'},
+			{from: 'Gym', to: "Schatzi", line: 'Bus 250', station: 'Grabbeallee/Pastor-Niemöller-Platz', location: 'second'}
+			// {from: 'Work', to: "Home", line: 'U2', station: 'Stadtmitte'}
 		];
 	}
 });
@@ -46,6 +46,7 @@ Template.main.events({
 		FlowRouter.go('/add');
 	},
 	'click [data-action="to-connection"]'() {
+		Session.set('searchLocation', this.location);
 		FlowRouter.go('/connection');
 	}
 });
