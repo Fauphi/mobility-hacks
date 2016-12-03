@@ -2,11 +2,11 @@
 
 # @Author: Philipp Fauser (philipp@attic-studio.net)
 # @Date:   2016-06-14 14:28:52
-# @Last Modified by:   philipp
-# @Last Modified time: 2016-11-02 15:10:35
+# @Last Modified by:   Philipp
+# @Last Modified time: 2016-12-03 13:22:59
 
 # set env variables
-# export MONGO_URL=''
+# export MONGO_URL='mongodb://admin:hacks@ds119768.mlab.com:19768/mobilityhacks'
 # export MAIL_URL=''
 
 # set settings.json for startup

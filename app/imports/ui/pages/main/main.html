@@ -7,26 +7,33 @@
 
 			<div class="main-wrapper">
 				<div class="row">
-					<div class="col-md-6">
-						<h1>Body</h1>
-					</div>
-					<div class="col-md-6">
-						{{> quickForm collection=getCollection doc=this id="insertBlogEntry" type="method" meteormethod="blog.insert" buttonContent="Save"}}
+					<div class="col-md-12">
+						<input type="text" placeholder="Search.." data-action="to-searcg"/>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-md-12">
-						<h3>Blogs</h3>
+						<h4>Favorites:</h4>
+
 						<ul>
-						{{#each getBlog}}
-							<li>{{title}} <button class="btn btn-danger btn-xs" data-action="remove"><i class="fa fa-trash"></i></button></li>
+						{{#each favorites}}
+							<li data-action="to-connection">
+								{{name}}<br>
+								Linie: {{line}}<br>
+								Richtung: {{direction}}
+							</li>
 						{{/each}}
 						</ul>
 					</div>
 				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<button data-action="to-add">Add</button>
+					</div>
+				</div>
 			</div>
 			
-			{{> footer}}
+			<!-- {{> footer}} -->
 
 		</div>
 	</div>

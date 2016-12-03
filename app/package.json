@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Basic project for a Meteor Blaze App",
   "scripts": {
-  	"start": "meteor run",
+    "start": "meteor run",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Philipp Fauser",
