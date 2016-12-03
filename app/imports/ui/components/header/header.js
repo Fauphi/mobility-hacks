@@ -2,7 +2,7 @@
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
 * @Last Modified by:   Radu Gota (radu@attic-studio.net)
-* @Last Modified time: 2016-12-03 19:08:07
+* @Last Modified time: 2016-12-03 19:12:10
 */
 
 import { Template } from 'meteor/templating';
@@ -29,6 +29,9 @@ Template.header.helpers({
 	},
 	headerHeight: function(){
 		return Session.get("headerHeight");
+	},
+	timeData: function(){
+		return Session.get('timeData');
 	},
 	isMain: function(){
 		let routeName = FlowRouter.getRouteName();
