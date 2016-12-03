@@ -1,8 +1,8 @@
 /*
 * @Author: Philipp
 * @Date:   2016-10-05 16:35:36
-* @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-03 13:48:07
+* @Last Modified by:   Radu Gota (radu@attic-studio.net)
+* @Last Modified time: 2016-12-03 15:10:31
 */
 
 import {FlowRouter} from 'meteor/kadira:flow-router';
@@ -17,13 +17,15 @@ import '/imports/ui/layouts/basic/basic.js';
 FlowRouter.route(['/'], {
     action: function(params, queryParams) {
         BlazeLayout.render('App_body', {main: 'main'});
-    }
+    },
+    name: "main"
 });
 
 FlowRouter.route(['/search'], {
     action: function(params, queryParams) {
         BlazeLayout.render('App_body', {main: 'search'});
-    }
+    },
+    name: "search"
 });
 
 FlowRouter.route(['/add'], {
@@ -35,5 +37,6 @@ FlowRouter.route(['/add'], {
 FlowRouter.route(['/connection'], {
     action: function(params, queryParams) {
         BlazeLayout.render('App_body', {main: 'connection'});
-    }
+    },
+    name: "connection"
 });

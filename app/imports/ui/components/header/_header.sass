@@ -2,4 +2,91 @@
 	background: rgba(0,0,0,0.03)
 	border: 1px solid rgba(0,0,0,0.06)
 	border-width: 1px 0px
-	margin-top: 10px
+	height: 15vh
+	color: white
+	@include transition(500ms)
+	h4
+		font-weight: 700
+		font-size: 24px
+		padding: 0
+		margin: 0
+	p 
+		font-size: 16px	
+		padding: 0
+		margin: 0
+		opacity: 0.5
+		font-style: italic
+	&.green
+		background-color: $green
+	&.red
+		background-color: $red	
+	&.expanded
+		height: 50vh
+	.main-header
+		padding: 0 15px	
+
+	.connection-header
+		display: block
+		position: relative
+		.goToMain
+			position: absolute
+			top: 10px
+			right: 15px
+			font-size: 20px
+		.title, .display, .time-bar, .status
+			width: 100%
+			float: right	
+		.title 
+			height: 12vh
+			span 	
+				&.big 
+					font-size: 36px
+					font-weight: 800
+				&.small 
+					font-size: 20px
+					opacity: 0.8
+					font-weight: 300
+					padding-left: 5px
+		.status
+			height: 5vh
+			overflow: hidden
+			span 
+				font-style: italic
+				font-size: 20px
+				opacity: 0.75
+						
+			
+		.display
+			height: 25vh
+			overflow: hidden
+			.huge
+				font-size: 28vh
+				font-weight: 700
+			.small
+				font-size: 6vh	
+				font-weight: 300
+		.time-bar
+			height: 8vh
+			overflow: auto
+			width: 100vw
+			white-space: nowrap
+			text-align: left
+			&::-webkit-scrollbar
+				display: none
+			.time-block
+				display: inline-block
+    			white-space: nowrap
+				.top
+					height: 4vh
+				.bottom
+					height: 4vh
+					border-left: solid 1px white
+				&.small
+					width: 10vw
+				&.medium
+					width: 20vw	
+					&.bottom 
+						background-color: blue
+
+				
+

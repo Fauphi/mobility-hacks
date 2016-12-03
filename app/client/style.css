@@ -3,7 +3,8 @@ html, body {
   height: 100%;
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; }
+  -moz-osx-font-smoothing: grayscale;
+  font-family: "Lato", sans-serif; }
 
 .row {
   margin: 0 !important; }
@@ -16,6 +17,14 @@ button:focus {
 
 .nopadding {
   padding: 0 !important; }
+
+.nomargin {
+  margin: 0 !important; }
+
+.container {
+  float: left;
+  width: 100%;
+  padding: 0; }
 
 .flexcenter {
   display: -webkit-box;
@@ -65,15 +74,124 @@ button:focus {
   justify-content: center;
   height: 100%; }
 
-#main .main-wrapper {
-  background: white;
-  margin: 10px 0px; }
+.app-row {
+  display: block;
+  width: 100vw;
+  float: left;
+  border-bottom: solid 1px #bebebe;
+  padding: 15px 5px; }
+  .app-row.favorite span.star {
+    color: #dce15f;
+    padding-right: 5px; }
+  .app-row.favorite span.big {
+    font-size: 28px;
+    font-weight: 800; }
+  .app-row.favorite span.small {
+    font-size: 14px;
+    opacity: 0.8;
+    font-weight: 300;
+    padding-left: 5px; }
+  .app-row.search {
+    font-size: 16px; }
+    .app-row.search i {
+      padding-right: 5px; }
+
+#main {
+  width: 100vw; }
+  #main .main-wrapper {
+    background: white;
+    margin: 0px; }
 
 #header {
   background: rgba(0, 0, 0, 0.03);
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-width: 1px 0px;
-  margin-top: 10px; }
+  height: 15vh;
+  color: white;
+  -webkit-transition: all 500ms;
+  -moz-transition: all 500ms;
+  -ms-transition: all 500ms;
+  -o-transition: all 500ms;
+  -webkit-transition-timing-function: cubic-bezier(0.67, 0.14, 0.36, 0.78);
+  transition-timing-function: cubic-bezier(0.67, 0.14, 0.36, 0.78); }
+  #header h4 {
+    font-weight: 700;
+    font-size: 24px;
+    padding: 0;
+    margin: 0; }
+  #header p {
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+    opacity: 0.5;
+    font-style: italic; }
+  #header.green {
+    background-color: #65C997; }
+  #header.red {
+    background-color: #F46D6D; }
+  #header.expanded {
+    height: 50vh; }
+  #header .main-header {
+    padding: 0 15px; }
+  #header .connection-header {
+    display: block;
+    position: relative; }
+    #header .connection-header .goToMain {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px; }
+    #header .connection-header .title, #header .connection-header .display, #header .connection-header .time-bar, #header .connection-header .status {
+      width: 100%;
+      float: right; }
+    #header .connection-header .title {
+      height: 12vh; }
+      #header .connection-header .title span.big {
+        font-size: 36px;
+        font-weight: 800; }
+      #header .connection-header .title span.small {
+        font-size: 20px;
+        opacity: 0.8;
+        font-weight: 300;
+        padding-left: 5px; }
+    #header .connection-header .status {
+      height: 5vh;
+      overflow: hidden; }
+      #header .connection-header .status span {
+        font-style: italic;
+        font-size: 20px;
+        opacity: 0.75; }
+    #header .connection-header .display {
+      height: 25vh;
+      overflow: hidden; }
+      #header .connection-header .display .huge {
+        font-size: 28vh;
+        font-weight: 700; }
+      #header .connection-header .display .small {
+        font-size: 6vh;
+        font-weight: 300; }
+    #header .connection-header .time-bar {
+      height: 8vh;
+      overflow: auto;
+      width: 100vw;
+      white-space: nowrap;
+      text-align: left; }
+      #header .connection-header .time-bar::-webkit-scrollbar {
+        display: none; }
+      #header .connection-header .time-bar .time-block {
+        display: inline-block;
+          display-white-space: nowrap; }
+        #header .connection-header .time-bar .time-block .top {
+          height: 4vh; }
+        #header .connection-header .time-bar .time-block .bottom {
+          height: 4vh;
+          border-left: solid 1px white; }
+        #header .connection-header .time-bar .time-block.small {
+          width: 10vw; }
+        #header .connection-header .time-bar .time-block.medium {
+          width: 20vw; }
+          #header .connection-header .time-bar .time-block.medium.bottom {
+            background-color: blue; }
 
 #footer {
   background: rgba(0, 0, 0, 0.03);

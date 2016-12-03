@@ -1,10 +1,81 @@
 
 <template name="header">
-	<div id="header">
-		<div class="row">
-			<div class="col-md-12">
-				<h1>Header</h1>
+	<div id="header" class="{{statusColor}} {{headerHeight}}">
+
+		{{#if isMain}}
+			<div class="main-header animated fadeIn flexleft">
+
+					<div>
+						<h4>Select Departure</h4>
+						<p>or search for the right station</p>
+					</div>
+				
 			</div>
-		</div>
+		{{/if}}
+		{{#if isConnection}}
+			<div class="connection-header animated fadeIn">
+				<div class="goToMain">
+					<i class="ion-close"></i>
+				</div>
+				<div class="title">
+					<div class="flexbottom">
+						<div>
+							<span class="big">Work</span>
+							<span class="small">to home</span>
+						</div>
+					</div>
+				</div>
+				
+				<div class="display">
+					<div class="flexcenter">
+						<div>
+							<span class="huge">4</span>
+							<span class="small">min</span>
+						</div>
+					</div>
+				</div>
+				<div class="status">
+					<div class="flexcenter">
+						<span>Plenty of legroom</span>
+					</div>
+				</div>
+				<div class="time-bar">
+					<div class="time-block small">
+						<div class="top"></div>
+						<div class="bottom"></div>
+					</div>
+					<div class="time-block small">
+						<div class="top"></div>
+						<div class="bottom"></div>
+					</div>
+					<div class="time-block medium">
+						<div class="top"></div>
+						<div class="bottom"></div>
+					</div>
+					<div class="time-block medium">
+						<div class="top"></div>
+						<div class="bottom"></div>
+					</div>
+					<div class="time-block medium">
+						<div class="top"></div>
+						<div class="bottom"></div>
+					</div>
+					<div class="time-block medium">
+						<div class="top"></div>
+						<div class="bottom"></div>
+					</div>
+					<div class="time-block medium">
+						<div class="top"></div>
+						<div class="bottom"></div>
+					</div>
+					<div class="time-block medium">
+						<div class="top"></div>
+						<div class="bottom"></div>
+					</div>
+					
+				</div>
+
+			</div>
+		{{/if}}
 	</div>
 </template>

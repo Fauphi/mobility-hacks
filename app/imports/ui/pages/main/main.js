@@ -1,8 +1,8 @@
 /*
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
-* @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-03 13:50:10
+* @Last Modified by:   Radu Gota (radu@attic-studio.net)
+* @Last Modified time: 2016-12-03 15:06:10
 */
 
 import { Meteor } from 'meteor/meteor';
@@ -21,9 +21,16 @@ Template.main.onCreated(function created() {
 	this.subscribe('all-connections');
 });
 
+Template.main.onRendered(function rendered(){
+	Session.set("statusColor", "green");
+	Session.set("headerHeight", "");
+
+
+});
+
 Template.main.helpers({
 	favorites() {
-		return [{name: 'Greifswalder', line: 'S41', direction: 'Ostbahnhof'}];
+		return [{from: 'Home', to: "Work", line: 'U8', station: 'Rosenthaler Platz'}];
 	}
 });
 
