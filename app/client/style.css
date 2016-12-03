@@ -124,8 +124,8 @@ button:focus {
   -moz-transition: all 500ms;
   -ms-transition: all 500ms;
   -o-transition: all 500ms;
-  -webkit-transition-timing-function: cubic-bezier(0.67, 0.14, 0.36, 0.78);
-  transition-timing-function: cubic-bezier(0.67, 0.14, 0.36, 0.78); }
+  -webkit-transition-timing-function: ease;
+  transition-timing-function: ease; }
   #header h4 {
     font-weight: 700;
     font-size: 24px;
@@ -157,7 +157,7 @@ button:focus {
       width: 100%;
       float: right; }
     #header .connection-header .title {
-      height: 15vh; }
+      height: 20vh; }
       #header .connection-header .title span.big {
         font-size: 36px;
         font-weight: 800; }
@@ -167,14 +167,31 @@ button:focus {
         font-weight: 300;
         padding-left: 5px; }
     #header .connection-header .display {
-      height: 35vh;
+      height: 33vh;
       overflow: hidden; }
-      #header .connection-header .display .huge {
-        font-size: 28vh;
-        font-weight: 700; }
-      #header .connection-header .display .small {
-        font-size: 6vh;
-        font-weight: 300; }
+      #header .connection-header .display .main-display {
+        -webkit-transition: all 300ms;
+        -moz-transition: all 300ms;
+        -ms-transition: all 300ms;
+        -o-transition: all 300ms;
+        -webkit-transition-timing-function: ease;
+        transition-timing-function: ease; }
+        #header .connection-header .display .main-display.closed {
+          margin-right: -10vw;
+          -webkit-transition: all 300ms;
+          -moz-transition: all 300ms;
+          -ms-transition: all 300ms;
+          -o-transition: all 300ms;
+          -webkit-transition-timing-function: ease;
+          transition-timing-function: ease; }
+        #header .connection-header .display .main-display .huge {
+          font-size: 28vh;
+          font-weight: 700; }
+          #header .connection-header .display .main-display .huge.shrink {
+            font-size: 23vh; }
+        #header .connection-header .display .main-display .small {
+          font-size: 6vh;
+          font-weight: 300; }
       #header .connection-header .display .delay {
         background-color: white;
         width: 20vw;
@@ -182,7 +199,8 @@ button:focus {
         border-radius: 10px;
         border-bottom-left-radius: 0px;
         text-align: center;
-        padding-top: 1.5vh; }
+        padding-top: 1.5vh;
+        margin-left: 10px; }
         #header .connection-header .display .delay span {
           color: #F46D6D;
           line-height: 0; }
@@ -190,14 +208,14 @@ button:focus {
             font-size: 8vw;
             font-weight: 800; }
     #header .connection-header .status {
-      height: 6vh;
+      height: 5vh;
       overflow: hidden; }
       #header .connection-header .status span {
         font-style: italic;
         font-size: 20px;
         opacity: 0.75; }
     #header .connection-header .time-bar {
-      height: 14vh;
+      height: 12vh;
       overflow-y: hidden;
       overflow-x: scroll;
       -webkit-overflow-scrolling: touch;
@@ -222,15 +240,17 @@ button:focus {
           margin-top: 10%;
           width: 100%;
           border-left: solid 1px white;
-          float: left; }
+          float: left;
+          position: relative; }
         #header .connection-header .time-bar .time-block.small {
-          width: 12vw;
+          width: 14vw;
           height: 100%; }
         #header .connection-header .time-bar .time-block.medium {
           width: 22vw;
           height: 100%; }
-          #header .connection-header .time-bar .time-block.medium.bottom {
-            background-color: blue; }
+        #header .connection-header .time-bar .time-block.large {
+          width: 28vw;
+          height: 100%; }
         #header .connection-header .time-bar .time-block:first-of-type .top {
           height: 40%; }
           #header .connection-header .time-bar .time-block:first-of-type .top span {

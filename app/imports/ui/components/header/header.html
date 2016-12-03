@@ -13,63 +13,74 @@
 			</div>
 		{{/if}}
 		{{#if isConnection}}
-			<div class="connection-header animated fadeIn">
-				<div class="goToMain">
-					<i class="ion-close"></i>
-				</div>
-				<div class="title">
-					<div class="flexbottom">
-						<div>
-							<span class="big">Work</span>
-							<span class="small">to home</span>
-						</div>
+			{{#if timeData}}
+				<div class="connection-header animated fadeIn">
+					<div class="goToMain">
+						<i class="ion-close"></i>
 					</div>
-				</div>
-				
-				<div class="display">
-					<div class="flexcenter">
-						<div>
-							<span class="huge">4</span>
-							<span class="small">min</span>
-						</div>
-						{{#if delay.status}}
-							<div class="delay animated slideInRight">
-								<div class="flexcenter">
-									<div>
-										<div class="row">
-											<span class="upper">+{{delay.minutes}}</span>
-										</div>
-										<div class="row">
-											<span class="lower">LATE</span>
-										</div>
-									</div>
-									
+					<div class="title">
+						<div class="flexbottom">
+							<div>
+								<div class="row text-center">
+									<span class="big">Work</span>
+									<span class="small">to home</span>
+								</div>
+								<div class="row text-center">
+									<span>U8 from Rosenthaler Platz</span>
 								</div>
 							</div>
-						{{/if}}
-					</div>
-				</div>
-				<div class="status">
-					<div class="flexcenter">
-						<span>Plenty of legroom</span>
-					</div>
-				</div>
-				<div class="time-bar">
-					{{#each timeData}}
-						<div class="time-block small">
-							<div class="top">
-								<div class="flexbottomleft">
-									<span>{{time}}</span>
-								</div>
-							</div>
-							<div class="bottom">
-								
-							</div>
 						</div>
-					{{/each}}					
-				</div>
+					</div>
+					
+					<div class="display">
+						<div class="flexcenter">
 
-			</div>
+							<div class="main-display {{#if nextTime.delay}} {{else}} closed {{/if}}">
+								<span class="huge {{#with minuteCount}}{{#if longTime}}shrink{{/if}}{{/with}}">{{minuteCount}}</span>
+								<span class="small">min</span>
+							</div>
+							{{#if nextTime.delay}}
+								<div class="delay  animated{{#if nextTime.delay}}  fadeInRight {{else}}  fadeOutRight {{/if}}">
+									<div class="flexcenter">
+										<div>
+											<div class="row">
+												<span class="upper">+{{nextTime.delay}}</span>
+											</div>
+											<div class="row">
+												<span class="lower">LATE</span>
+											</div>
+										</div>
+										
+									</div>
+								</div>
+							{{/if}}
+						</div>
+					</div>
+					<div class="status">
+						<div class="flexcenter">
+							<span>Plenty of legroom</span>
+						</div>
+					</div>
+					<div class="time-bar">
+						{{#each timeData}}
+							<div class="time-block {{timeSteps}}">
+								<div class="top">
+									<div class="flexbottomleft">
+										<span>{{time}} {{#if hasDelay}}+{{/if}}</span>
+										
+									</div>
+								</div>
+								<div class="bottom">
+								</div>
+							</div>
+						{{/each}}					
+					</div>
+
+				</div>
+			{{/if}}
+		{{else}}
+			<!-- {{> loader}}	 -->
+			Loading
 		{{/if}}
 	</div>
 </template>
