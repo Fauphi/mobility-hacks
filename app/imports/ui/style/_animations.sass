@@ -1,0 +1,35 @@
+
+// * @Author: Radu Gota (radu@attic-studio.net)
+// * @Date:   2016-06-17 14:23:50
+// * @Last Modified by:   Radu Gota (radu@attic-studio.net)
+// * @Last Modified time: 2016-06-28 14:13:26
+
+
+=keyframes($name)
+  @-webkit-keyframes #{$name}
+    @content
+  @-moz-keyframes #{$name}
+    @content
+  @-ms-keyframes #{$name}
+    @content
+  @keyframes #{$name}
+    @content
+
+@mixin transition($time)
+    -webkit-transition: all $time
+    -moz-transition: all $time
+    -ms-transition: all $time
+    -o-transition: all $time
+    -webkit-transition-timing-function: cubic-bezier(.67,.14,.36,.78)
+    transition-timing-function: cubic-bezier(.67,.14,.36,.78)   
+
+
+@mixin transition-delay($time, $delay)
+    -webkit-transition: all $time
+    -moz-transition: all $time
+    -ms-transition: all $time
+    -o-transition: all $time
+    -webkit-transition-timing-function: cubic-bezier(.67,.14,.36,.78)
+    transition-timing-function: cubic-bezier(.67,.14,.36,.78)  
+    -webkit-transition-delay: $delay
+    transition-delay: $delay    

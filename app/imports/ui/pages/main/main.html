@@ -1,0 +1,33 @@
+
+<template name="main">
+	<div id="main">
+		<div class="container">
+
+			{{> header}}
+
+			<div class="main-wrapper">
+				<div class="row">
+					<div class="col-md-6">
+						<h1>Body</h1>
+					</div>
+					<div class="col-md-6">
+						{{> quickForm collection=getCollection doc=this id="insertBlogEntry" type="method" meteormethod="blog.insert" buttonContent="Save"}}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<h3>Blogs</h3>
+						<ul>
+						{{#each getBlog}}
+							<li>{{title}} <button class="btn btn-danger btn-xs" data-action="remove"><i class="fa fa-trash"></i></button></li>
+						{{/each}}
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+			{{> footer}}
+
+		</div>
+	</div>
+</template>

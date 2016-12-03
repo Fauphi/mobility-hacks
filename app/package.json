@@ -1,0 +1,15 @@
+{
+  "name": "Meteor App",
+  "version": "0.1.0",
+  "description": "Basic project for a Meteor Blaze App",
+  "scripts": {
+  	"start": "meteor run",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Philipp Fauser",
+  "company": "Attic-Studio",
+  "license": "MIT",
+  "dependencies": {
+    "meteor-node-stubs": "~0.2.0"
+  }
+}
