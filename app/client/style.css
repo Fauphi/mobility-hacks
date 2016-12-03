@@ -74,6 +74,18 @@ button:focus {
   justify-content: center;
   height: 100%; }
 
+.flexbottomleft {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: flex-end;
+  align-items: flex-end;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  height: 100%; }
+
 .app-row {
   display: block;
   width: 100vw;
@@ -130,7 +142,7 @@ button:focus {
   #header.red {
     background-color: #F46D6D; }
   #header.expanded {
-    height: 50vh; }
+    height: 70vh; }
   #header .main-header {
     padding: 0 15px; }
   #header .connection-header {
@@ -145,7 +157,7 @@ button:focus {
       width: 100%;
       float: right; }
     #header .connection-header .title {
-      height: 12vh; }
+      height: 15vh; }
       #header .connection-header .title span.big {
         font-size: 36px;
         font-weight: 800; }
@@ -154,15 +166,8 @@ button:focus {
         opacity: 0.8;
         font-weight: 300;
         padding-left: 5px; }
-    #header .connection-header .status {
-      height: 5vh;
-      overflow: hidden; }
-      #header .connection-header .status span {
-        font-style: italic;
-        font-size: 20px;
-        opacity: 0.75; }
     #header .connection-header .display {
-      height: 25vh;
+      height: 35vh;
       overflow: hidden; }
       #header .connection-header .display .huge {
         font-size: 28vh;
@@ -170,35 +175,70 @@ button:focus {
       #header .connection-header .display .small {
         font-size: 6vh;
         font-weight: 300; }
+      #header .connection-header .display .delay {
+        background-color: white;
+        width: 20vw;
+        height: 20vw;
+        border-radius: 10px;
+        border-bottom-left-radius: 0px;
+        text-align: center;
+        padding-top: 1.5vh; }
+        #header .connection-header .display .delay span {
+          color: #F46D6D;
+          line-height: 0; }
+          #header .connection-header .display .delay span.upper {
+            font-size: 8vw;
+            font-weight: 800; }
+    #header .connection-header .status {
+      height: 6vh;
+      overflow: hidden; }
+      #header .connection-header .status span {
+        font-style: italic;
+        font-size: 20px;
+        opacity: 0.75; }
     #header .connection-header .time-bar {
-      height: 8vh;
-      overflow: auto;
+      height: 14vh;
+      overflow-y: hidden;
+      overflow-x: scroll;
+      -webkit-overflow-scrolling: touch;
       width: 100vw;
       white-space: nowrap;
       text-align: left;
-      padding-left: 5vw; }
+      padding-left: 10vw; }
       #header .connection-header .time-bar::-webkit-scrollbar {
         display: none; }
       #header .connection-header .time-bar .time-block {
         display: inline-block;
           display-white-space: nowrap; }
         #header .connection-header .time-bar .time-block .top {
-          height: 50%;
+          height: 70%;
           width: 100%;
           float: left; }
+          #header .connection-header .time-bar .time-block .top span {
+            margin-left: -4.5vw;
+            font-size: 3.5vw; }
         #header .connection-header .time-bar .time-block .bottom {
-          height: 50%;
+          height: 25%;
+          margin-top: 10%;
           width: 100%;
           border-left: solid 1px white;
           float: left; }
         #header .connection-header .time-bar .time-block.small {
-          width: 10vw;
+          width: 12vw;
           height: 100%; }
         #header .connection-header .time-bar .time-block.medium {
-          width: 20vw;
+          width: 22vw;
           height: 100%; }
           #header .connection-header .time-bar .time-block.medium.bottom {
             background-color: blue; }
+        #header .connection-header .time-bar .time-block:first-of-type .top {
+          height: 40%; }
+          #header .connection-header .time-bar .time-block:first-of-type .top span {
+            font-weight: 800;
+            font-size: 5vw;
+            margin-left: -6vw; }
+        #header .connection-header .time-bar .time-block:first-of-type .bottom {
+          height: 60%; }
 
 #footer {
   background: rgba(0, 0, 0, 0.03);
