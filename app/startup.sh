@@ -10,4 +10,5 @@ export MONGO_URL='mongodb://admin:hacks@ds119768.mlab.com:19768/mobilityhacks'
 # export MAIL_URL=''
 
 # set settings.json for startup
+#meteor run android-device --port 3000 --settings settings.json
 meteor run --port 3000 --settings settings.json

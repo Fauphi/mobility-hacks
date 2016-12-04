@@ -1,8 +1,13 @@
 /*
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
+<<<<<<< HEAD
 * @Last Modified by:   Radu Gota (radu@attic-studio.net)
 * @Last Modified time: 2016-12-04 11:11:24
+=======
+* @Last Modified by:   Philipp
+* @Last Modified time: 2016-12-04 10:51:58
+>>>>>>> 2c085e1ee6ef4fbd6de696af40271d843d7866cb
 */
 
 import { Template } from 'meteor/templating';
@@ -85,7 +90,12 @@ Template.header.helpers({
 		var next = Session.get('timeData');
 
 		if(next[0].timestamp > current){
-			var minuteCount = Math.round((next[0].timestamp - current) / 60000) % 60;
+			const nextHourCorrected = Number(moment(next[0].timestamp).format('HH'))-1
+			,	corretedNext = moment(next[0].timestamp).hour(nextHourCorrected).toDate().getTime();
+			
+			console.log(moment(current).format('HH:mm')+' - '+moment(corretedNext).format('HH:mm'));
+
+			var minuteCount = Math.ceil((corretedNext - current) / 60000) % 60;
 			Session.set("minuteCount", minuteCount);
 			return next[0];
 		} else {
