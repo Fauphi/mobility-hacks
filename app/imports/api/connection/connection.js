@@ -2,7 +2,7 @@
 * @Author: Philipp
 * @Date:   2016-12-03 13:13:34
 * @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-04 00:04:03
+* @Last Modified time: 2016-12-04 09:10:26
 */
 
 // 'use strict';
@@ -26,7 +26,7 @@ const getCounts = (locationName, locationId, direction, directionName) => {
 		if(hstArray.indexOf(item['Ab-Hst-Nr'])==-1) hstArray.push(item['Ab-Hst-Nr']);
 	}
 
-	console.log('Direectioins: ',hstArray);
+	// console.log('Direectioins: ',hstArray);
 
 	// find direction stop
 	for(let j=0;j<hstArray.length;j++) {
@@ -48,7 +48,7 @@ const getCounts = (locationName, locationId, direction, directionName) => {
 		if(found) break;
 	}	
 
-	console.log(directionObject);
+	// console.log(directionObject);
 
 	const realCountData = CustomerCounts.find({'Haltestelle': regex, 'Ab-Hst-Nr': directionObject['Ab-Hst-Nr']}).fetch();
 	
@@ -76,7 +76,7 @@ const getCounts = (locationName, locationId, direction, directionName) => {
 
 	// calc total customers
 	for(let item of sorted) {
-		// console.log(item.Haltestelle+': '+item.Abfahrtszeit);
+		console.log(item.Haltestelle+': '+item.Abfahrtszeit);
 		item.total = 0;
 		const totalCountArray = CustomerCounts.find({'Ab-Hst-Nr': item['Ab-Hst-Nr'], Kurs: item.Kurs, 'PAG-Nr': item['PAG-Nr']}, {sort: {'lfd-Hst': 1}}).fetch();
 
@@ -90,7 +90,7 @@ const getCounts = (locationName, locationId, direction, directionName) => {
 			item.total += Math.round(diff);
 		}
 
-		// console.log('Total: ', item.total);
+		console.log('Total: ', item.total);
 	}
 
 	return {allTotals: sorted};

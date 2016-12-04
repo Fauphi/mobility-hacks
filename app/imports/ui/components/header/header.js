@@ -1,8 +1,8 @@
 /*
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
-* @Last Modified by:   Radu Gota (radu@attic-studio.net)
-* @Last Modified time: 2016-12-04 00:52:35
+* @Last Modified by:   Philipp
+* @Last Modified time: 2016-12-04 10:11:51
 */
 
 import { Template } from 'meteor/templating';
@@ -11,12 +11,10 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import './header.html';
 
 Template.header.onCreated(function created() {
-
 	Session.set("delay", {"status": true, "minutes": 2});
 	Session.set("pastStep", "0");
 	Tracker.autorun(function() {
-	  var routeName = FlowRouter.getRouteName();
-	  
+		var routeName = FlowRouter.getRouteName();
 	});
 });
 
@@ -24,25 +22,30 @@ Template.header.onCreated(function created() {
 
 Template.header.helpers({
 	statusColor: function(){
-		var times = Session.get('timeData')
-		, totals = Session.get('totalData');
+		const times = Session.get('timeData')
+		,	totals = Session.get('totalData');
+		
+		let	result = 'green';
+
 		if(times && totals) {
 			var clock = times[0]
 			,	bt = getBerlinTime(clock.time);
-			console.log(bt);
-			var data = getClosest(bt, totals);
-			if(data){
-				if(data.total < 10){
-					Session.set("statusColor", "green");
-				} else if (data.total < 20 && data.total > 9){
-					Session.set("statusColor", "orange");
-				} else if(data.total > 19){
-					Session.set("statusColor", "red");
-				}
-			}
-		}
+			
+			var data = getClosest(bt, totals.allTotals);
 
-		return Session.get("statusColor");
+			if(data){
+				if(data.total<10) result = 'green';
+				else if (data.total<20 && data.total>9) result = 'orange';
+				else if(data.total>19) result = 'red';
+			}
+
+			console.log('Background-Color: ', result);
+			return result;
+		} else {
+			console.log('Background-Color: ', result);
+			return result;
+		}
+		
 	},
 	headerHeight: function(){
 		return Session.get("headerHeight");
@@ -102,7 +105,7 @@ Template.header.helpers({
 			for(i = 0; i < data.length; i++){
 				var x = Math.min(data.length - 1, i + 1)
 				,	diff = Math.round((data[x].timestamp - data[i].timestamp) / 60000) % 60;
-				console.log(data[x].timestamp - data[i].timestamp);
+				// console.log(data[x].timestamp - data[i].timestamp);
 				if( diff > 15){
 					return "large";
 				} else if(diff < 8){
@@ -118,8 +121,8 @@ Template.header.helpers({
 		const i = Math.max(index-1,0)
 		,	t = Session.get('timeData')
 		,	s = Session.get('totalData')
-		console.log(i);
-		console.log(t[i]);
+		// console.log(i);
+		// console.log(t[i]);
 		if(t) testDate = getBerlinTime(t[i].time);
 		
 
@@ -139,11 +142,13 @@ Template.header.helpers({
 		const t = time || "00:28"
 		,	s = Session.get('totalData')
 		,	testDate = getBerlinTime(t);
-		console.log(testDate);
+
 		if(s){
-			console.log(getClosest(testDate, s.allTotals));
-			var total = getClosest(testDate, s.allTotals).total;
-			console.log(total);
+			const closest = getClosest(testDate, s.allTotals)
+			,	total = (closest)?closest.total:0;
+
+			// if(closest) console.log('---- '+time+': '+total+' ('+closest.Abfahrtszeit+')');
+			// else console.log('not found');
 
 			if(total < 10){
 				return "#65C997";
@@ -180,10 +185,13 @@ const getClosest = function(testDate, days) {
 	var currDiff = 0;
 	var i = 0;
 
-	testDate = new Date(testDate).getTime();
+	const testTime = moment(testDate).format('HH:mm');
+	// console.log(testDate);
+	testDate = new Date(new Date(getBerlinTime(testTime))).getTime();
 
 	for(i = 0; i < days.length; ++i){
 	   currDiff = testDate - new Date(getBerlinTime(days[i].Abfahrtszeit)).getTime();
+	   // console.log(new Date(getBerlinTime(days[i].Abfahrtszeit)));
 	   if(currDiff < 0 && currDiff > bestNextDiff){
 	   // If currDiff is negative, then testDate is more in the past than days[i].
 	   // This means, that from testDate's point of view, days[i] is in the future
@@ -202,24 +210,14 @@ const getClosest = function(testDate, days) {
 	}
 	/* days[bestPrevDate] is the best previous date, 
 	   days[bestNextDate] is the best next date */
-	const nextDiff = testDate - new Date(getBerlinTime(days[bestNextDate])).getTime()
-	,	prevDiff = testDate - new Date(getBerlinTime(days[bestPrevDate])).getTime();
+	if(days[bestNextDate] && days[bestPrevDate]) {
+		const nextDiff = new Date(getBerlinTime(days[bestNextDate].Abfahrtszeit)).getTime() - testDate
+		,	prevDiff = testDate - new Date(getBerlinTime(days[bestPrevDate].Abfahrtszeit)).getTime();	
 
-	// var data = (nextDiff<prevDiff)?days[bestNextDate]:days[bestPrevDate];
-	// if(data){
-	// 	if(data.total < 10){
-	// 		Session.set("statusColor", "green");
-	// 		return true;
-	// 	} else if (data.total < 20 && data.total > 9){
-	// 		Session.set("statusColor", "orange");
-	// 		return true;
-	// 	} else if(data.total > 19){
-	// 		Session.set("statusColor", "red");
-	// 		return true;
-	// 	} else {
-	// 		return false;
-	// 	}
-	// }
+		const result = (nextDiff<prevDiff)?days[bestNextDate]:days[bestPrevDate];
+
+		return result;
+	}
 	
-	return (nextDiff<prevDiff)?days[bestNextDate]:days[bestPrevDate];
+	
 }
