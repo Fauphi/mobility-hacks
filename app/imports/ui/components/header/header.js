@@ -2,7 +2,7 @@
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
 * @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-04 11:49:57
+* @Last Modified time: 2016-12-04 11:53:23
 */
 
 import { Template } from 'meteor/templating';
@@ -186,7 +186,7 @@ var getTotalColor = (total) => {
 	if(total < 15){
 		return "#57AF83";
 	} else if(total > 14 && total < 24 ){
-		return "#F4A66D";
+		return "#FC9F5A";
 	} else {
 		return "#D05D5D";
 	}
