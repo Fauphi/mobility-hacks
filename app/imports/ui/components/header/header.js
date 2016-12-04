@@ -2,7 +2,7 @@
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
 * @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-04 11:37:07
+* @Last Modified time: 2016-12-04 11:39:08
 */
 
 import { Template } from 'meteor/templating';
@@ -121,6 +121,32 @@ Template.header.helpers({
 			}
 		}	
 					
+	},
+	statusMessage: function(){
+		const times = Session.get('timeData')
+		,	totals = Session.get('totalData');
+		
+		let	result = 'green';
+
+		if(times && totals) {
+			var clock = times[0]
+			,	bt = getBerlinTime(clock.time);
+			
+			var data = getClosest(bt, totals.allTotals);
+
+			if(data){
+				if(data.total<10) result = 'Plenty of legroom';
+				else if (data.total<20 && data.total>9) result = "Don't mind standing?";
+				else if(data.total>19) result = 'It might get tight';
+			}
+
+			// console.log('Background-Color: ', result);
+			return result;
+		} else {
+			// console.log('Background-Color: ', result);
+			return result;
+		}
+		
 	},
 	getPreviousTime(index){
 		const i = Math.max(index-1,0)
