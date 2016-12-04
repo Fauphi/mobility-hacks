@@ -2,7 +2,7 @@
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
 * @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-04 09:59:52
+* @Last Modified time: 2016-12-04 10:53:33
 */
 
 import { Meteor } from 'meteor/meteor';
@@ -22,8 +22,11 @@ Template.main.onCreated(function created() {
 });
 
 Template.main.onRendered(function rendered(){
-	Session.set("statusColor", "green");
+	// Session.set("statusColor", "green");
 	Session.set("headerHeight", "");
+
+	Session.set('timeData', null);
+	Session.set('totalData', null);
 });
 
 Template.main.helpers({

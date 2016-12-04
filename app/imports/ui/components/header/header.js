@@ -2,7 +2,7 @@
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
 * @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-04 10:51:58
+* @Last Modified time: 2016-12-04 11:37:07
 */
 
 import { Template } from 'meteor/templating';
@@ -34,15 +34,15 @@ Template.header.helpers({
 			var data = getClosest(bt, totals.allTotals);
 
 			if(data){
-				if(data.total<10) result = 'green';
-				else if (data.total<20 && data.total>9) result = 'orange';
-				else if(data.total>19) result = 'red';
+				if(data.total<15) result = 'green';
+				else if (data.total<14 && data.total>24) result = 'orange';
+				else result = 'red';
 			}
 
-			console.log('Background-Color: ', result);
+			// console.log('Background-Color: ', result);
 			return result;
 		} else {
-			console.log('Background-Color: ', result);
+			// console.log('Background-Color: ', result);
 			return result;
 		}
 		
@@ -62,7 +62,7 @@ Template.header.helpers({
 			const nextHourCorrected = Number(moment(next[0].timestamp).format('HH'))-1
 			,	corretedNext = moment(next[0].timestamp).hour(nextHourCorrected).toDate().getTime();
 			
-			console.log(moment(current).format('HH:mm')+' - '+moment(corretedNext).format('HH:mm'));
+			// console.log(moment(current).format('HH:mm')+' - '+moment(corretedNext).format('HH:mm'));
 
 			var minuteCount = Math.ceil((corretedNext - current) / 60000) % 60;
 			Session.set("minuteCount", minuteCount);
@@ -125,26 +125,20 @@ Template.header.helpers({
 	getPreviousTime(index){
 		const i = Math.max(index-1,0)
 		,	t = Session.get('timeData')
-		,	s = Session.get('totalData')
-		// console.log(i);
-		// console.log(t[i]);
+		,	s = Session.get('totalData');
+
+		// console.log('Prev: ',i);
+
 		if(t) testDate = getBerlinTime(t[i].time);
 		
-
 		if(s && t){
 			var total = getClosest(testDate, s.allTotals).total;
 
-			if(total < 10){
-				return "#57AF83";
-			} else if(total > 9 && total < 20 ){
-				return "#F4A66D";
-			} else {
-				return "#D05D5D";
-			}
+			return getTotalColor(total);
 		}
 	},
 	getClosest(time) {
-		const t = time || "00:28"
+		const t = time || moment(new Date()).format('HH:mm')
 		,	s = Session.get('totalData')
 		,	testDate = getBerlinTime(t);
 
@@ -155,17 +149,21 @@ Template.header.helpers({
 			// if(closest) console.log('---- '+time+': '+total+' ('+closest.Abfahrtszeit+')');
 			// else console.log('not found');
 
-			if(total < 15){
-				return "#57AF83";
-			} else if(total > 14 && total < 24  ){
-				return "#F4A66D";
-			} else {
-				return "#D05D5D";
-			}
+			return getTotalColor(total);
 		}
 	}
 
 });
+
+var getTotalColor = (total) => {
+	if(total < 15){
+		return "#57AF83";
+	} else if(total > 14 && total < 24 ){
+		return "#F4A66D";
+	} else {
+		return "#D05D5D";
+	}
+}
 
 Template.header.events({
 	'click .goToMain': function(){

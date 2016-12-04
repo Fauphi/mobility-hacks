@@ -127,6 +127,8 @@ button:focus {
   #main .main-wrapper {
     background: white;
     margin: 0px; }
+  #main input {
+    border: none !important; }
 
 #header {
   background: rgba(0, 0, 0, 0.03);

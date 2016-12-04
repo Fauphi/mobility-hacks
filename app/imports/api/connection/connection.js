@@ -2,7 +2,7 @@
 * @Author: Philipp
 * @Date:   2016-12-03 13:13:34
 * @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-04 10:44:01
+* @Last Modified time: 2016-12-04 11:37:18
 */
 
 // 'use strict';
@@ -76,7 +76,7 @@ const getCounts = (locationName, locationId, direction, directionName) => {
 
 	// calc total customers
 	for(let item of sorted) {
-		console.log(item.Haltestelle+': '+item.Abfahrtszeit);
+		// console.log(item.Haltestelle+': '+item.Abfahrtszeit);
 		item.total = 0;
 		const totalCountArray = CustomerCounts.find({'Ab-Hst-Nr': item['Ab-Hst-Nr'], Kurs: item.Kurs, 'PAG-Nr': item['PAG-Nr']}, {sort: {'lfd-Hst': 1}}).fetch();
 
@@ -90,7 +90,7 @@ const getCounts = (locationName, locationId, direction, directionName) => {
 			item.total += Math.round(diff);
 		}
 
-		console.log('Total: ', item.total);
+		// console.log('Total: ', item.total);
 	}
 
 	return {allTotals: sorted};
