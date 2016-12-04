@@ -134,6 +134,8 @@ button:focus {
   border-width: 1px 0px;
   height: 15vh;
   color: white;
+  position: relative;
+  overflow: hidden;
   -webkit-transition: all 500ms;
   -moz-transition: all 500ms;
   -ms-transition: all 500ms;
@@ -151,7 +153,7 @@ button:focus {
     margin: 0;
     opacity: 0.5;
     font-style: italic; }
-  #header.green {
+  #header.orange {
     background-color: #F4A66D; }
   #header.green {
     background-color: #65C997; }
