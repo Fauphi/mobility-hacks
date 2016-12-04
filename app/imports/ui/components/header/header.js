@@ -1,8 +1,8 @@
 /*
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
-* @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-03 21:52:14
+* @Last Modified by:   Radu Gota (radu@attic-studio.net)
+* @Last Modified time: 2016-12-04 00:52:35
 */
 
 import { Template } from 'meteor/templating';
@@ -11,14 +11,11 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import './header.html';
 
 Template.header.onCreated(function created() {
-	// Session.set("statusColor", "green");
-	// Session.set("headerHeight", "");
+
 	Session.set("delay", {"status": true, "minutes": 2});
 	Session.set("pastStep", "0");
-	// 
 	Tracker.autorun(function() {
 	  var routeName = FlowRouter.getRouteName();
-	  console.log("Current route name is: ", routeName);
 	  
 	});
 });
@@ -27,6 +24,24 @@ Template.header.onCreated(function created() {
 
 Template.header.helpers({
 	statusColor: function(){
+		var times = Session.get('timeData')
+		, totals = Session.get('totalData');
+		if(times && totals) {
+			var clock = times[0]
+			,	bt = getBerlinTime(clock.time);
+			console.log(bt);
+			var data = getClosest(bt, totals);
+			if(data){
+				if(data.total < 10){
+					Session.set("statusColor", "green");
+				} else if (data.total < 20 && data.total > 9){
+					Session.set("statusColor", "orange");
+				} else if(data.total > 19){
+					Session.set("statusColor", "red");
+				}
+			}
+		}
+
 		return Session.get("statusColor");
 	},
 	headerHeight: function(){
@@ -40,15 +55,15 @@ Template.header.helpers({
 		// var current = Math.floor(Date.now() / 1000);
 		var next = Session.get('timeData');
 
-		if(next){
-			var i = 0;
-			if(next[i].timestamp > current){
-				var minuteCount = Math.round((next[i].timestamp - current) / 60000) % 60;
-				Session.set("minuteCount", minuteCount);
-				return next[i];
-			} else {
-				i++
-			}
+		if(next[0].timestamp > current){
+			var minuteCount = Math.round((next[0].timestamp - current) / 60000) % 60;
+			Session.set("minuteCount", minuteCount);
+			return next[0];
+		} else {
+			// refresh data if first time has passed
+			Meteor.call('connection.getTimes', new Date(), function(err,res) {
+				Session.set('timeData', res);
+			});
 		}
 		
 	},
@@ -85,24 +100,61 @@ Template.header.helpers({
 		var data = Session.get('timeData');
 		if(data){
 			for(i = 0; i < data.length; i++){
-				var x = i + 1
-				,	diff = Math.round((data[x].timestamp - data[i].timestamp) / 60000) % 60
-				if( diff > 20){
+				var x = Math.min(data.length - 1, i + 1)
+				,	diff = Math.round((data[x].timestamp - data[i].timestamp) / 60000) % 60;
+				console.log(data[x].timestamp - data[i].timestamp);
+				if( diff > 15){
 					return "large";
-				} else if(diff < 10){
+				} else if(diff < 8){
 					return "small"
 				} else {
 					return "medium"
 				};
 			}
-		}			
+		}	
+					
 	},
-	getClosest() {
-		const s = Session.get('totalData')
-		,	testDate = new Date().getTime();
-		if(s) console.log(getClosest(testDate, s.allTotals));
-		return s && getClosest(testDate, s.allTotals);
+	getPreviousTime(index){
+		const i = Math.max(index-1,0)
+		,	t = Session.get('timeData')
+		,	s = Session.get('totalData')
+		console.log(i);
+		console.log(t[i]);
+		if(t) testDate = getBerlinTime(t[i].time);
+		
+
+		if(s && t){
+			var total = getClosest(testDate, s.allTotals).total;
+
+			if(total < 10){
+				return "#65C997";
+			} else if(total > 9 && total < 20 ){
+				return "#F4A66D";
+			} else {
+				return "#F46D6D";
+			}
+		}
+	},
+	getClosest(time) {
+		const t = time || "00:28"
+		,	s = Session.get('totalData')
+		,	testDate = getBerlinTime(t);
+		console.log(testDate);
+		if(s){
+			console.log(getClosest(testDate, s.allTotals));
+			var total = getClosest(testDate, s.allTotals).total;
+			console.log(total);
+
+			if(total < 10){
+				return "#65C997";
+			} else if(total > 9 && total < 20 ){
+				return "#F4A66D";
+			} else {
+				return "#F46D6D";
+			}
+		}
 	}
+
 });
 
 Template.header.events({
@@ -110,12 +162,6 @@ Template.header.events({
 		FlowRouter.go('/');
 	}
 });
-
-
-
-var messages = {
-
-}
 
 const getBerlinTime = (timeString) => {
 	const tmpDate = moment(new Date()).format('YYYY-MM-DD');
@@ -159,5 +205,21 @@ const getClosest = function(testDate, days) {
 	const nextDiff = testDate - new Date(getBerlinTime(days[bestNextDate])).getTime()
 	,	prevDiff = testDate - new Date(getBerlinTime(days[bestPrevDate])).getTime();
 
+	// var data = (nextDiff<prevDiff)?days[bestNextDate]:days[bestPrevDate];
+	// if(data){
+	// 	if(data.total < 10){
+	// 		Session.set("statusColor", "green");
+	// 		return true;
+	// 	} else if (data.total < 20 && data.total > 9){
+	// 		Session.set("statusColor", "orange");
+	// 		return true;
+	// 	} else if(data.total > 19){
+	// 		Session.set("statusColor", "red");
+	// 		return true;
+	// 	} else {
+	// 		return false;
+	// 	}
+	// }
+	
 	return (nextDiff<prevDiff)?days[bestNextDate]:days[bestPrevDate];
 }
