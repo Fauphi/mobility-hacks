@@ -2,7 +2,7 @@
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
 * @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-04 11:39:08
+* @Last Modified time: 2016-12-04 11:49:57
 */
 
 import { Template } from 'meteor/templating';
@@ -17,8 +17,6 @@ Template.header.onCreated(function created() {
 		var routeName = FlowRouter.getRouteName();
 	});
 });
-
-
 
 Template.header.helpers({
 	statusColor: function(){
@@ -35,7 +33,7 @@ Template.header.helpers({
 
 			if(data){
 				if(data.total<15) result = 'green';
-				else if (data.total<14 && data.total>24) result = 'orange';
+				else if (data.total<24 && data.total>14) result = 'orange';
 				else result = 'red';
 			}
 
@@ -53,6 +51,9 @@ Template.header.helpers({
 	timeData: function(){
 		return Session.get('timeData');
 	},
+	locationData() {
+		return Session.get('locationData');
+	},
 	nextTime: function(){
 		var current = new Date().getTime();
 		// var current = Math.floor(Date.now() / 1000);
@@ -65,7 +66,7 @@ Template.header.helpers({
 			// console.log(moment(current).format('HH:mm')+' - '+moment(corretedNext).format('HH:mm'));
 
 			var minuteCount = Math.ceil((corretedNext - current) / 60000) % 60;
-			Session.set("minuteCount", minuteCount);
+			Session.set("minuteCount", Math.max(0, minuteCount));
 			return next[0];
 		} else {
 			// refresh data if first time has passed
@@ -135,9 +136,9 @@ Template.header.helpers({
 			var data = getClosest(bt, totals.allTotals);
 
 			if(data){
-				if(data.total<10) result = 'Plenty of legroom';
-				else if (data.total<20 && data.total>9) result = "Don't mind standing?";
-				else if(data.total>19) result = 'It might get tight';
+				if(data.total<15) result = 'Plenty of legroom';
+				else if (data.total<24 && data.total>14) result = "Don't mind standing?";
+				else result = 'It might get tight';
 			}
 
 			// console.log('Background-Color: ', result);

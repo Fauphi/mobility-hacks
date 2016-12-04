@@ -1,8 +1,8 @@
 /*
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
-* @Last Modified by:   Radu Gota (radu@attic-studio.net)
-* @Last Modified time: 2016-12-04 10:51:30
+* @Last Modified by:   Philipp
+* @Last Modified time: 2016-12-04 11:49:38
 */
 
 import { Meteor } from 'meteor/meteor';
@@ -24,6 +24,9 @@ Template.main.onCreated(function created() {
 Template.main.onRendered(function rendered(){
 	Session.set("statusColor", "green");
 	Session.set("headerHeight", "");
+
+	Session.set('totalData', null);
+	Session.set('timeData', null);
 });
 
 Template.main.helpers({
@@ -45,6 +48,7 @@ Template.main.events({
 	},
 	'click [data-action="to-connection"]'() {
 		Session.set('searchLocation', this.location);
+		Session.set('locationData', this);
 		FlowRouter.go('/connection');
 	}
 });

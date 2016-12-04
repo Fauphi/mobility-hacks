@@ -19,13 +19,15 @@
 					<div class="title">
 						<div class="flexbottom">
 							<div>
+								{{#with locationData}}
 								<div class="row text-center">
-									<span class="big">Work</span>
-									<span class="small">to home</span>
+									<span class="big">{{from}}</span>
+									<span class="small">to {{to}}</span>
 								</div>
 								<div class="row text-center">
-									<span>U8 from Rosenthaler Platz</span>
+									<span>{{line}} from {{station}}</span>
 								</div>
+								{{/with}}
 							</div>
 						</div>
 					</div>
