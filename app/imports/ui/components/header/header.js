@@ -2,7 +2,7 @@
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
 * @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-04 10:42:19
+* @Last Modified time: 2016-12-04 10:51:58
 */
 
 import { Template } from 'meteor/templating';
@@ -135,11 +135,11 @@ Template.header.helpers({
 			var total = getClosest(testDate, s.allTotals).total;
 
 			if(total < 10){
-				return "#65C997";
+				return "#57AF83";
 			} else if(total > 9 && total < 20 ){
 				return "#F4A66D";
 			} else {
-				return "#F46D6D";
+				return "#D05D5D";
 			}
 		}
 	},
@@ -155,12 +155,12 @@ Template.header.helpers({
 			// if(closest) console.log('---- '+time+': '+total+' ('+closest.Abfahrtszeit+')');
 			// else console.log('not found');
 
-			if(total < 10){
-				return "#65C997";
-			} else if(total > 9 && total < 20 ){
+			if(total < 15){
+				return "#57AF83";
+			} else if(total > 14 && total < 24  ){
 				return "#F4A66D";
 			} else {
-				return "#F46D6D";
+				return "#D05D5D";
 			}
 		}
 	}
