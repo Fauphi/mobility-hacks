@@ -42,3 +42,4 @@ frozeman:persistent-minimongo
 aldeed:collection2
 aldeed:simple-schema
 aldeed:autoform
+fastclick

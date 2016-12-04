@@ -2,7 +2,7 @@
 * @Author: Philipp
 * @Date:   2016-12-03 13:13:34
 * @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-04 09:10:26
+* @Last Modified time: 2016-12-04 10:44:01
 */
 
 // 'use strict';
@@ -165,7 +165,8 @@ if(Meteor.isServer) {
 				if(!delay) delay = 0;
 
 				const formattedTime = item.time.split(':')[0]+':'+item.time.split(':')[1]
-				,	timestamp = new Date(tmpDate+'T'+item.rtTime).getTime();
+				// ,	timestamp = new Date(tmpDate+'T'+item.rtTime).getTime();
+				,	timestamp = new Date(tmpDate+'T'+item.time).getTime();
 
 				timeArray.push({time: formattedTime, timestamp: timestamp, direction: item.direction, delay: delay});
 			}
