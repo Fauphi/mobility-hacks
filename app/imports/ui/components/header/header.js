@@ -2,7 +2,7 @@
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
 * @Last Modified by:   Radu Gota (radu@attic-studio.net)
-* @Last Modified time: 2016-12-03 23:58:38
+* @Last Modified time: 2016-12-04 00:52:35
 */
 
 import { Template } from 'meteor/templating';
@@ -24,6 +24,24 @@ Template.header.onCreated(function created() {
 
 Template.header.helpers({
 	statusColor: function(){
+		var times = Session.get('timeData')
+		, totals = Session.get('totalData');
+		if(times && totals) {
+			var clock = times[0]
+			,	bt = getBerlinTime(clock.time);
+			console.log(bt);
+			var data = getClosest(bt, totals);
+			if(data){
+				if(data.total < 10){
+					Session.set("statusColor", "green");
+				} else if (data.total < 20 && data.total > 9){
+					Session.set("statusColor", "orange");
+				} else if(data.total > 19){
+					Session.set("statusColor", "red");
+				}
+			}
+		}
+
 		return Session.get("statusColor");
 	},
 	headerHeight: function(){
@@ -44,7 +62,6 @@ Template.header.helpers({
 		} else {
 			// refresh data if first time has passed
 			Meteor.call('connection.getTimes', new Date(), function(err,res) {
-				console.log(res);
 				Session.set('timeData', res);
 			});
 		}
@@ -83,7 +100,7 @@ Template.header.helpers({
 		var data = Session.get('timeData');
 		if(data){
 			for(i = 0; i < data.length; i++){
-				var x = i + 1
+				var x = Math.min(data.length - 1, i + 1)
 				,	diff = Math.round((data[x].timestamp - data[i].timestamp) / 60000) % 60;
 				console.log(data[x].timestamp - data[i].timestamp);
 				if( diff > 15){
@@ -94,14 +111,50 @@ Template.header.helpers({
 					return "medium"
 				};
 			}
-		}			
+		}	
+					
+	},
+	getPreviousTime(index){
+		const i = Math.max(index-1,0)
+		,	t = Session.get('timeData')
+		,	s = Session.get('totalData')
+		console.log(i);
+		console.log(t[i]);
+		if(t) testDate = getBerlinTime(t[i].time);
+		
+
+		if(s && t){
+			var total = getClosest(testDate, s.allTotals).total;
+
+			if(total < 10){
+				return "#65C997";
+			} else if(total > 9 && total < 20 ){
+				return "#F4A66D";
+			} else {
+				return "#F46D6D";
+			}
+		}
 	},
 	getClosest(time) {
-		const s = Session.get('totalData')
-		,	testDate = new Date(time).getTime();
-		if(s) console.log(getClosest(testDate, s.allTotals));
-		return s && getClosest(testDate, s.allTotals).total;
+		const t = time || "00:28"
+		,	s = Session.get('totalData')
+		,	testDate = getBerlinTime(t);
+		console.log(testDate);
+		if(s){
+			console.log(getClosest(testDate, s.allTotals));
+			var total = getClosest(testDate, s.allTotals).total;
+			console.log(total);
+
+			if(total < 10){
+				return "#65C997";
+			} else if(total > 9 && total < 20 ){
+				return "#F4A66D";
+			} else {
+				return "#F46D6D";
+			}
+		}
 	}
+
 });
 
 Template.header.events({
@@ -152,21 +205,21 @@ const getClosest = function(testDate, days) {
 	const nextDiff = testDate - new Date(getBerlinTime(days[bestNextDate])).getTime()
 	,	prevDiff = testDate - new Date(getBerlinTime(days[bestPrevDate])).getTime();
 
-	var data = (nextDiff<prevDiff)?days[bestNextDate]:days[bestPrevDate];
-	if(data){
-		if(data.total < 10){
-			Session.set("statusColor", "green");
-			return true;
-		} else if (data.total < 20 && data.total > 9){
-			Session.set("statusColor", "orange");
-			return true;
-		} else if(data.total > 19){
-			Session.set("statusColor", "red");
-			return true;
-		} else {
-			return false;
-		}
-	}
+	// var data = (nextDiff<prevDiff)?days[bestNextDate]:days[bestPrevDate];
+	// if(data){
+	// 	if(data.total < 10){
+	// 		Session.set("statusColor", "green");
+	// 		return true;
+	// 	} else if (data.total < 20 && data.total > 9){
+	// 		Session.set("statusColor", "orange");
+	// 		return true;
+	// 	} else if(data.total > 19){
+	// 		Session.set("statusColor", "red");
+	// 		return true;
+	// 	} else {
+	// 		return false;
+	// 	}
+	// }
 	
-	// return (nextDiff<prevDiff)?days[bestNextDate]:days[bestPrevDate];
+	return (nextDiff<prevDiff)?days[bestNextDate]:days[bestPrevDate];
 }
