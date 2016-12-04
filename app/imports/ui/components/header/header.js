@@ -2,7 +2,7 @@
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
 * @Last Modified by:   Radu Gota (radu@attic-studio.net)
-* @Last Modified time: 2016-12-04 10:39:58
+* @Last Modified time: 2016-12-04 11:11:24
 */
 
 import { Template } from 'meteor/templating';
@@ -37,6 +37,32 @@ Template.header.helpers({
 				if(data.total<10) result = 'green';
 				else if (data.total<20 && data.total>9) result = 'orange';
 				else if(data.total>19) result = 'red';
+			}
+
+			console.log('Background-Color: ', result);
+			return result;
+		} else {
+			console.log('Background-Color: ', result);
+			return result;
+		}
+		
+	},
+	statusMessage: function(){
+		const times = Session.get('timeData')
+		,	totals = Session.get('totalData');
+		
+		let	result = 'green';
+
+		if(times && totals) {
+			var clock = times[0]
+			,	bt = getBerlinTime(clock.time);
+			
+			var data = getClosest(bt, totals.allTotals);
+
+			if(data){
+				if(data.total<10) result = 'Plenty of legroom';
+				else if (data.total<20 && data.total>9) result = "Don't mind standing?";
+				else if(data.total>19) result = 'It might get tight';
 			}
 
 			console.log('Background-Color: ', result);
@@ -132,7 +158,7 @@ Template.header.helpers({
 			if(total < 10){
 				return "#57AF83";
 			} else if(total > 9 && total < 20 ){
-				return "#F4A66D";
+				return "#FC9F5A";
 			} else {
 				return "#D05D5D";
 			}
@@ -153,7 +179,7 @@ Template.header.helpers({
 			if(total < 15){
 				return "#57AF83";
 			} else if(total > 14 && total < 24  ){
-				return "#F4A66D";
+				return "#FC9F5A";
 			} else {
 				return "#D05D5D";
 			}

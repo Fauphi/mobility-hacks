@@ -1,8 +1,8 @@
 /*
 * @Author: Philipp
 * @Date:   2016-10-05 16:32:13
-* @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-04 09:59:52
+* @Last Modified by:   Radu Gota (radu@attic-studio.net)
+* @Last Modified time: 2016-12-04 10:51:30
 */
 
 import { Meteor } from 'meteor/meteor';
@@ -30,7 +30,7 @@ Template.main.helpers({
 	favorites() {
 		return [
 			{from: 'Home', to: "Work", line: 'Tram M1', station: 'Nordendstraße', location: 'first'},
-			{from: 'Gym', to: "Schatzi", line: 'Bus 250', station: 'Grabbeallee/Pastor-Niemöller-Platz', location: 'second'}
+			{from: 'Work', to: "Gym", line: 'Bus 250', station: 'Grabbeallee/Pastor-Niemöller-Platz', location: 'second'}
 			// {from: 'Work', to: "Home", line: 'U2', station: 'Stadtmitte'}
 		];
 	}
