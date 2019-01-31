@@ -1,8 +1,8 @@
 /*
 * @Author: Philipp
 * @Date:   2016-12-03 13:13:34
-* @Last Modified by:   Philipp
-* @Last Modified time: 2016-12-04 11:37:18
+* @Last Modified by:   philipp
+* @Last Modified time: 2017-11-23 14:55:06
 */
 
 // 'use strict';
@@ -15,6 +15,7 @@ export const Connection = new Mongo.Collection('connection');
 const CustomerCounts = new Mongo.Collection('customercounts');
 
 const getCounts = (locationName, locationId, direction, directionName) => {
+	console.log(locationName);
 	const regex = new RegExp(locationName.trim(), 'g')
 	,	countData = CustomerCounts.find({'Haltestelle': regex}).fetch();
 
@@ -134,16 +135,41 @@ if(Meteor.isServer) {
 			,	direction = loc.direction
 			,	directionName = loc.directionName;
 
-    		const getRequest = Meteor.wrapAsync(HTTP.call, HTTP)
-			,	endParams = "&format=json&accessId=BVG-VBB-Dezember";
+			// @INFO: Does not work anymore due to missing API credentials
+     		// const getRequest = Meteor.wrapAsync(HTTP.call, HTTP)
+			// ,	endParams = "&format=json&accessId=BVG-VBB-Dezember";
 
-			// get delay
-			const startTime = moment(currentDate).format('HH:mm');
+			// // get delay
+			// const startTime = moment(currentDate).format('HH:mm');
 
-			const url2 = "http://demo.hafas.de/openapi/vbb-proxy/departureBoard?id="+locationId+"&direction="+direction+"&time="+startTime+"&maxJourneys=100"+endParams
-			,	res2 = getRequest('GET', url2).data;
+			// const url2 = "http://demo.hafas.de/openapi/vbb-proxy/departureBoard?id="+locationId+"&direction="+direction+"&time="+startTime+"&maxJourneys=100"+endParams
+			// ,	res2 = getRequest('GET', url2).data;
 
-			const departureArray = res2.Departure;
+			// const departureArray = res2.Departure;
+
+			// @INFO: Face timetable for testing
+			const departureArray = [
+				{
+					timestamp: 1511442172544,
+					time: '14:08:59',
+					rtTime: '14:08:59'
+				},
+				{
+					timestamp: 1511443172544,
+					time: '14:19:59',
+					rtTime: '14:19:59'
+				},
+				{
+					timestamp: 1511444172544,
+					time: '14:36:59',
+					rtTime: '14:36:59'
+				},
+				{
+					timestamp: 1511445172544,
+					time: '14:48:59',
+					rtTime: '14:48:59'
+				}
+			];
 
 			if(!departureArray) {
 				console.log('failed'); 
